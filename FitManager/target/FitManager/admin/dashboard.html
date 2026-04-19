@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Dashboard Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> <i class="fas fa-dumbbell"></i>
+        FitManager_Admin
+        <div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="abonnements.html">Abonnements</a>
+            <a href="demandes.html">Demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Tableau de bord administrateur</h1>
+        <p>Vue d'ensemble de la gestion multi-branches</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">348</div>
+                <div class="stat-label">Membres actifs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Salles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">68%</div>
+                <div class="stat-label">Taux occupation moyen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Demandes en attente</div>
+            </div>
+        </div>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h3>📍 Taux d'occupation par salle</h3>
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Salle</th><th>Occupation</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Centre-Ville</td><td><span class="occupation-eleve">87%</span></td></tr>
+                        <tr><td>Lac</td><td><span class="occupation-faible">45%</span></td></tr>
+                        <tr><td>Sfax</td><td><span class="occupation-moyen">75%</span></td></tr>
+                        <tr><td>Sousse</td><td><span class="occupation-moyen">65%</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h3>⏳ Demandes récentes</h3>
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Membre</th><th>Vers</th><th>Statut</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Mohamed T.</td><td>Lac</td><td><span class="occupation-moyen">En attente</span></td></tr>
+                        <tr><td>Leila M.</td><td>Sousse</td><td><span class="occupation-moyen">En attente</span></td></tr>
+                        <tr><td>Ahmed K.</td><td>Centre-Ville</td><td><span class="occupation-faible">Validée</span></td></tr>
+                    </tbody>
+                </table>
+                <a href="demandes.html" class="btn btn-secondary" style="margin-top: 1rem;">Voir toutes les demandes</a>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 1rem;">
+            <h3>📊 Statistiques mensuelles</h3>
+            <table style="margin-top: 1rem;">
+                <thead>
+                    <tr><th>Mois</th><th>Membres</th><th>Réservations</th><th>Revenus (DT)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Janvier</td><td>245</td><td>1890</td><td>36 750</td></tr>
+                    <tr><td>Février</td><td>268</td><td>2150</td><td>40 200</td></tr>
+                    <tr><td>Mars</td><td>289</td><td>2340</td><td>43 350</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

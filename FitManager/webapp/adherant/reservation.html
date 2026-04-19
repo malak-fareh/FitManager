@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Réserver un créneau</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> <i class="fas fa-dumbbell"></i>
+        FitManager
+        <div>
+            <a href="dashboard.html">Tableau de bord</a>
+            <a href="reservation.html">Réserver</a>
+            <a href="demande-transfert.html">Changer de local</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container" style="max-width: 600px;">
+        <div class="card">
+            <h2>📅 Réservation de créneau</h2>
+            <form action="../reservation" method="post" style="margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label>Salle</label>
+                    <select name="local_id" required>
+                        <option value="">Sélectionner une salle</option>
+                        <option value="1">FitManager Centre-Ville (87% occupation)</option>
+                        <option value="2">FitManager Lac (45% occupation)</option>
+                        <option value="3">FitManager Sfax (75% occupation)</option>
+                        <option value="4">FitManager Sousse (65% occupation)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Créneau horaire</label>
+                    <select name="creneau" required>
+                        <option value="">Sélectionner un créneau</option>
+                        <option value="06:00-07:00">06:00 - 07:00</option>
+                        <option value="07:00-08:00">07:00 - 08:00</option>
+                        <option value="08:00-09:00">08:00 - 09:00</option>
+                        <option value="09:00-10:00">09:00 - 10:00</option>
+                        <option value="10:00-11:00">10:00 - 11:00</option>
+                        <option value="11:00-12:00">11:00 - 12:00</option>
+                        <option value="12:00-13:00">12:00 - 13:00</option>
+                        <option value="13:00-14:00">13:00 - 14:00</option>
+                        <option value="14:00-15:00">14:00 - 15:00</option>
+                        <option value="15:00-16:00">15:00 - 16:00</option>
+                        <option value="16:00-17:00">16:00 - 17:00</option>
+                        <option value="17:00-18:00">17:00 - 18:00</option>
+                        <option value="18:00-19:00">18:00 - 19:00</option>
+                        <option value="19:00-20:00">19:00 - 20:00</option>
+                        <option value="20:00-21:00">20:00 - 21:00</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Réserver</button>
+            </form>
+        </div>
+        
+        <div class="card" style="margin-top: 1rem;">
+            <h3>ℹ️ Informations</h3>
+            <p>• Vous pouvez réserver jusqu'à 3 créneaux par semaine</p>
+            <p>• Annulation possible jusqu'à 2h avant le créneau</p>
+            <p>• Capacité limitée par salle</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Gestion des locaux</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-dumbbell"></i> FitManager - Admin</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="abonnements.html">Abonnements</a>
+        <a href="locaux-gestion.html">Locaux</a>
+        <a href="demandes.html">Demandes</a>
+        <a href="analytics.html">Analytique</a>
+        <a href="../logout">Déconnexion</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+            <h1 style="margin:0;"><i class="fas fa-building" style="color:var(--primary-orange);"></i> Gestion des locaux</h1>
+            <p style="color:var(--text-light);margin:0;">Créer, modifier ou désactiver des salles</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal()">
+            <i class="fas fa-plus"></i> Nouveau local
+        </button>
+    </div>
+
+    <!-- Liste des locaux -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>Capacité max</th>
+                        <th>Abonnés actifs</th>
+                        <th>Occupation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="locaux-tbody">
+                    <tr><td colspan="7" style="text-align:center;color:var(--text-light);padding:2rem;">Chargement…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal création / édition -->
+<div class="modal-overlay" id="localModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Nouveau local</h2>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-content">
+            <form id="localForm">
+                <input type="hidden" id="localId">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Nom de la salle</label>
+                    <input type="text" id="localNom" placeholder="ex : Salle Menzah" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                    <input type="text" id="localAdresse" placeholder="ex : 12 rue X, Tunis" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-users"></i> Capacité maximale</label>
+                    <input type="number" id="localCapacite" placeholder="ex : 100" required min="1" max="9999">
+                </div>
+                <div id="modal-error" class="alert-error" style="display:none;"></div>
+                <div style="display:flex;gap:1rem;margin-top:1rem;">
+                    <button type="submit" class="btn btn-primary btn-block" id="modal-submit">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-block" onclick="closeModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Données mock (la table `local` n'a pas encore de servlet dédié)
+    const locauxData = [
+        { id:1, nom:'Salle Centre-Ville', adresse:'15 rue Habib Bourguiba, Tunis', capaciteMax:100, aboActifs:62, occupation:62 },
+        { id:2, nom:'Salle Lac',          adresse:'Immeuble Les Berges du Lac, Tunis', capaciteMax:150, aboActifs:45, occupation:30 },
+        { id:3, nom:'Salle Marsa',        adresse:'5 avenue Taieb Mhiri, La Marsa',   capaciteMax:80,  aboActifs:36, occupation:45 }
+    ];
+
+    function tauxClass(t) {
+        if (t < 50) return 'occupation-faible';
+        if (t < 80) return 'occupation-moyen';
+        return 'occupation-eleve';
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('locaux-tbody');
+        if (!locauxData.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-light);padding:2rem;">Aucun local enregistré.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = locauxData.map(l => {
+            const t = Math.round(l.aboActifs / l.capaciteMax * 100);
+            return `<tr>
+                <td>${l.id}</td>
+                <td><strong>${l.nom}</strong></td>
+                <td>${l.adresse}</td>
+                <td>${l.capaciteMax}</td>
+                <td>${l.aboActifs}</td>
+                <td><span class="${tauxClass(t)}">${t}%</span></td>
+                <td>
+                    <button class="btn btn-secondary btn-sm" onclick="editLocal(${l.id})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm" style="background:#fef2f2;color:#b91c1c;" onclick="deleteLocal(${l.id})"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function openModal(id) {
+        document.getElementById('localModal').classList.add('active');
+        document.getElementById('localForm').reset();
+        document.getElementById('modal-error').style.display = 'none';
+        if (!id) {
+            document.getElementById('modal-title').textContent = 'Nouveau local';
+            document.getElementById('localId').value = '';
+            document.getElementById('modal-submit').innerHTML = '<i class="fas fa-plus"></i> Créer';
+        }
+    }
+
+    function editLocal(id) {
+        const l = locauxData.find(x => x.id === id);
+        if (!l) return;
+        openModal(id);
+        document.getElementById('modal-title').textContent  = 'Modifier — ' + l.nom;
+        document.getElementById('localId').value            = l.id;
+        document.getElementById('localNom').value           = l.nom;
+        document.getElementById('localAdresse').value       = l.adresse;
+        document.getElementById('localCapacite').value      = l.capaciteMax;
+        document.getElementById('modal-submit').innerHTML   = '<i class="fas fa-save"></i> Mettre à jour';
+    }
+
+    function closeModal() {
+        document.getElementById('localModal').classList.remove('active');
+    }
+
+    document.getElementById('localModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    document.getElementById('localForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id       = document.getElementById('localId').value;
+        const nom      = document.getElementById('localNom').value.trim();
+        const adresse  = document.getElementById('localAdresse').value.trim();
+        const capacite = parseInt(document.getElementById('localCapacite').value);
+
+        if (!nom || !adresse || !capacite) {
+            const err = document.getElementById('modal-error');
+            err.style.display = 'block';
+            err.textContent   = 'Veuillez remplir tous les champs.';
+            return;
+        }
+
+        if (id) {
+            const l = locauxData.find(x => x.id === parseInt(id));
+            if (l) { l.nom = nom; l.adresse = adresse; l.capaciteMax = capacite; }
+        } else {
+            const newId = locauxData.length ? Math.max(...locauxData.map(x=>x.id)) + 1 : 1;
+            locauxData.push({ id:newId, nom, adresse, capaciteMax:capacite, aboActifs:0, occupation:0 });
+        }
+        closeModal();
+        renderTable();
+    });
+
+    function deleteLocal(id) {
+        if (!confirm('Supprimer ce local ? Cette action est irréversible.')) return;
+        const idx = locauxData.findIndex(x => x.id === id);
+        if (idx !== -1) { locauxData.splice(idx, 1); renderTable(); }
+    }
+
+    renderTable();
+</script>
+</body>
+</html>

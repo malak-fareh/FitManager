@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Mon abonnement</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-dumbbell"></i> FitManager</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Tableau de bord</a>
+        <a href="mon-abonnement.html">Mon abonnement</a>
+        <a href="reservation.html">Réserver</a>
+        <a href="mes-reservations.html">Mes réservations</a>
+        <a href="demande-transfert.html">Changer de salle</a>
+        <a href="../logout">Déconnexion</a>
+    </div>
+</nav>
+
+<div class="container" style="max-width:760px;">
+    <h1 style="margin-bottom:0.25rem;"><i class="fas fa-id-card" style="color:var(--primary-orange);"></i> Mon abonnement</h1>
+    <p style="color:var(--text-light);margin-bottom:2rem;">Détails et statut de votre abonnement actuel</p>
+
+    <!-- Carte principale abonnement -->
+    <div class="card" id="abo-card" style="margin-bottom:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+            <div>
+                <p style="font-size:0.75rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">Salle principale</p>
+                <h2 id="abo-salle" style="margin:0;">—</h2>
+            </div>
+            <span id="abo-badge" class="badge badge-success" style="font-size:.875rem;padding:.5rem 1rem;">
+                <i class="fas fa-circle" style="font-size:.5rem;"></i> Chargement…
+            </span>
+        </div>
+
+        <hr style="margin:1.25rem 0;border:none;border-top:1px solid var(--border-light);">
+
+        <div class="grid-2" style="gap:1.5rem;">
+            <div>
+                <p style="font-size:.75rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">Date de début</p>
+                <p id="abo-debut" style="font-weight:600;">—</p>
+            </div>
+            <div>
+                <p style="font-size:.75rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">Date de fin</p>
+                <p id="abo-fin" style="font-weight:600;">—</p>
+            </div>
+        </div>
+
+        <!-- Barre de progression de la durée -->
+        <div style="margin-top:1.25rem;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:.4rem;">
+                <span style="font-size:.75rem;color:var(--text-light);">Avancement</span>
+                <span id="abo-pct" style="font-size:.75rem;font-weight:600;color:var(--primary-orange);">—</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill orange" id="abo-bar" style="width:0%;"></div>
+            </div>
+            <p id="abo-jours-restants" style="font-size:.75rem;color:var(--text-light);margin-top:.4rem;"></p>
+        </div>
+    </div>
+
+    <!-- Pas d'abonnement -->
+    <div id="no-abo" class="card empty-state" style="display:none;">
+        <div class="empty-state-icon"><i class="fas fa-times-circle"></i></div>
+        <h3>Aucun abonnement actif</h3>
+        <p>Contactez l'administration pour souscrire à un abonnement.</p>
+    </div>
+
+    <!-- Erreur -->
+    <div id="error-state" class="card empty-state" style="display:none;">
+        <div class="empty-state-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <h3>Impossible de charger vos données</h3>
+        <p>Veuillez vous <a href="../login.html">reconnecter</a>.</p>
+    </div>
+
+    <div class="card" style="background:var(--bg-light);border:1px dashed var(--border-light);">
+        <h3 style="margin-bottom:.75rem;"><i class="fas fa-info-circle" style="color:var(--primary-orange);"></i> Informations utiles</h3>
+        <ul style="padding-left:1.25rem;color:var(--text-gray);font-size:.875rem;line-height:2;">
+            <li>Pour renouveler ou modifier votre abonnement, contactez l'administration.</li>
+            <li>Pour changer de salle, utilisez la page <a href="demande-transfert.html" style="color:var(--primary-orange);">Changer de salle</a>.</li>
+            <li>Votre abonnement vous donne accès aux créneaux de réservation.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const STATUT_LABELS = { actif:'Actif', suspendu:'Suspendu', expire:'Expiré' };
+    const STATUT_CLASSES = { actif:'badge-success', suspendu:'badge-warning', expire:'badge-danger' };
+
+    function fmt(dateStr) {
+        if (!dateStr) return '—';
+        const [y,m,d] = dateStr.split('-');
+        return d+'/'+m+'/'+y;
+    }
+
+    fetch('../abonnements', { credentials:'include' })
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(list => {
+            // Trouver l'abonnement actif de l'utilisateur connecté
+            // Le servlet /abonnements retourne tous les abonnements ; on filtre côté client.
+            // En production, il faudrait un endpoint /abonnements?action=mine côté servlet.
+            const abo = Array.isArray(list)
+                ? list.find(a => a.statut === 'actif') || list[0]
+                : list;
+
+            if (!abo) {
+                document.getElementById('abo-card').style.display = 'none';
+                document.getElementById('no-abo').style.display   = 'block';
+                return;
+            }
+
+            const salles = { 1:'Salle Centre-Ville', 2:'Salle Lac', 3:'Salle Marsa' };
+            document.getElementById('abo-salle').textContent = salles[abo.localId] || 'Salle #'+abo.localId;
+            document.getElementById('abo-debut').textContent = fmt(abo.dateDebut);
+            document.getElementById('abo-fin').textContent   = fmt(abo.dateFin);
+
+            const badge = document.getElementById('abo-badge');
+            badge.className = 'badge ' + (STATUT_CLASSES[abo.statut] || 'badge-info');
+            badge.innerHTML = '<i class="fas fa-circle" style="font-size:.5rem;"></i> ' + (STATUT_LABELS[abo.statut] || abo.statut);
+
+            // Barre de progression
+            if (abo.dateDebut && abo.dateFin) {
+                const start = new Date(abo.dateDebut);
+                const end   = new Date(abo.dateFin);
+                const now   = new Date();
+                const total = end - start;
+                const elapsed = now - start;
+                const pct = Math.min(100, Math.max(0, Math.round(elapsed / total * 100)));
+                const joursRestants = Math.max(0, Math.round((end - now) / 86400000));
+
+                document.getElementById('abo-bar').style.width = pct + '%';
+                document.getElementById('abo-pct').textContent = pct + '%';
+                document.getElementById('abo-jours-restants').textContent =
+                    joursRestants > 0 ? joursRestants + ' jour(s) restant(s)' : 'Abonnement expiré';
+            }
+        })
+        .catch(() => {
+            document.getElementById('abo-card').style.display   = 'none';
+            document.getElementById('error-state').style.display = 'block';
+        });
+</script>
+</body>
+</html>

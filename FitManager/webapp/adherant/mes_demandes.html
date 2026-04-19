@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Mes demandes</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; }
+        .navbar { background: #0f172a; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        .navbar .logo i { color: #F97316; margin-right: 0.5rem; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .navbar a:hover { color: #F97316; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 1rem; }
+        h1 i { color: #F97316; margin-right: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: #1e293b; }
+        .statut-attente { color: #f59e0b; font-weight: bold; }
+        .statut-validee { color: #10b981; font-weight: bold; }
+        .statut-refusee { color: #ef4444; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            FitManager
+        </div>
+        <div>
+            <a href="dashboard.html">Tableau de bord</a>
+            <a href="demande-transfert.html">Changer de local</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1><i class="fas fa-history"></i> Historique des demandes de transfert</h1>
+        
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Local source</th>
+                        <th>Local destination</th>
+                        <th>Motif</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- DEMANDE 1 : En attente (correspond à la BDD) -->
+                    <tr>
+                        <td>18/03/2026</td>
+                        <td>FitManager Centre-Ville</td>
+                        <td>FitManager Lac</td>
+                        <td>Plus proche de mon travail</td>
+                        <td><span class="statut-attente"><i class="fas fa-hourglass-half"></i> En attente</span></td>
+                    </tr>
+                    <!-- DEMANDE 2 : Validée (exemple supplémentaire) -->
+                    <tr>
+                        <td>15/03/2026</td>
+                        <td>FitManager Centre-Ville</td>
+                        <td>FitManager Sousse</td>
+                        <td>Changement de domicile</td>
+                        <td><span class="statut-validee"><i class="fas fa-check-circle"></i> Validée</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

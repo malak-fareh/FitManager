@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Dashboard Gérant</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> <i class="fas fa-dumbbell"></i>
+        FitManager_Gérant
+        <div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Tableau de bord - FitManager Lac</h1>
+        <p>Gestion de votre salle</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">72</div>
+                <div class="stat-label">Membres actifs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100</div>
+                <div class="stat-label">Capacité max</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">45%</div>
+                <div class="stat-label">Taux d'occupation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Demandes en attente</div>
+            </div>
+        </div>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h3>📍 Taux d'occupation</h3>
+                <div style="margin: 1rem 0;">
+                    <div style="background: #eee; border-radius: 4px; height: 20px; width: 100%;">
+                        <div style="background: #28a745; width: 45%; height: 20px; border-radius: 4px;"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem;">45% - Occupation faible</p>
+                </div>
+                <p>Capacité restante : 55 places</p>
+            </div>
+            
+            <div class="card">
+                <h3>📊 Réservations aujourd'hui</h3>
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Créneau</th><th>Réservations</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>08:00 - 09:00</td><td>12/20</td></tr>
+                        <tr><td>09:00 - 10:00</td><td>8/20</td></tr>
+                        <tr><td>18:00 - 19:00</td><td>18/20</td></tr>
+                        <tr><td>19:00 - 20:00</td><td>15/20</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 1rem;">
+            <h3>⏳ Demandes de transfert vers votre salle</h3>
+            <table style="margin-top: 1rem;">
+                <thead>
+                    <tr><th>Membre</th><th>Salle actuelle</th><th>Date</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mohamed Trabelsi</td>
+                        <td>Centre-Ville</td>
+                        <td>18/03/2026</td>
+                        <td>
+                            <a href="#" class="btn btn-success" style="padding: 0.25rem 0.5rem;">Accepter</a>
+                            <a href="#" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">Refuser</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Leila Mejri</td>
+                        <td>Centre-Ville</td>
+                        <td>15/03/2026</td>
+                        <td>
+                            <a href="#" class="btn btn-success" style="padding: 0.25rem 0.5rem;">Accepter</a>
+                            <a href="#" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">Refuser</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

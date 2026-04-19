@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Demande de transfert</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; }
+        .navbar { background: #0f172a; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        .navbar .logo i { color: #F97316; margin-right: 0.5rem; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .navbar a:hover { color: #F97316; }
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h2 { margin-bottom: 0.5rem; color: #1E3A8A; }
+        h2 i { color: #F97316; margin-right: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155; }
+        select, input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-family: inherit; }
+        .btn { background: #F97316; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer; width: 100%; font-weight: 600; }
+        .alert-success { background: #d1fae5; color: #065f46; padding: 0.75rem; border-radius: 0.5rem; margin-top: 1rem; display: none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            FitManager
+        </div>
+        <div>
+            <a href="dashboard.html">Tableau de bord</a>
+            <a href="demande-transfert.html">Changer de local</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-exchange-alt"></i> Demande de changement de local</h2>
+            <p>Choisissez le local vers lequel vous souhaitez être transféré</p>
+            
+            <form id="transfertForm">
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Local actuel</label>
+                    <input type="text" id="localActuel" value="FitManager Centre-Ville" disabled>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-arrow-right"></i> Nouveau local</label>
+                    <select id="localDestination" required>
+                        <option value="">Choisir un local...</option>
+                        <option value="2">FitManager Lac (45% occupation - Faible)</option>
+                        <option value="3">FitManager Sfax (75% occupation - Moyen)</option>
+                        <option value="4">FitManager Sousse (65% occupation - Moyen)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-pen"></i> Motif (optionnel)</label>
+                    <textarea id="motif" rows="3" placeholder="Expliquez pourquoi vous souhaitez changer..."></textarea>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Envoyer la demande</button>
+            </form>
+            <div id="message" class="alert-success"></div>
+        </div>
+    </div>
+
+    <script>
+        // DONNÉES MOCKÉES - CORRESPONDENT À LA BASE DE DONNÉES
+        const userMock = {
+            id: 3,
+            nom: "Amira Ben Salem",
+            email: "amira@test.com",
+            role: "adherent",
+            localPrincipalId: 1,
+            localPrincipalNom: "FitManager Centre-Ville"
+        };
+        
+        const demandesMock = [
+            { id: 1, adherentId: 3, localSourceId: 1, localDestinationId: 2, date: "2026-03-18", statut: "en_attente", motif: "Plus proche de mon travail" }
+        ];
+        
+        document.getElementById('localActuel').value = userMock.localPrincipalNom;
+        
+        document.getElementById('transfertForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const localDestinationId = document.getElementById('localDestination').value;
+            const motif = document.getElementById('motif').value;
+            
+            if (!localDestinationId) {
+                alert('Veuillez sélectionner un local');
+                return;
+            }
+            
+            // Simuler l'envoi
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'block';
+            messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> ✅ Demande envoyée avec succès !';
+            
+            setTimeout(() => {
+                window.location.href = 'mes-demandes.html';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

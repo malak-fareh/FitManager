@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Connexion</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">  <i class="fas fa-dumbbell"></i>
+        FitManager
+        <div>
+            <a href="index.html">Accueil</a>
+            <a href="locaux.html">Nos salles</a>
+        </div>
+    </nav>
+    
+    <div class="container" style="max-width: 450px;">
+        <div class="card">
+            <h2 style="text-align: center;">Connexion</h2>
+            <form action="login" method="post">
+                <div class="form-group">
+                    <label>Email ou pseudo</label>
+                    <input type="text" name="identifiant" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" name="motDePasse" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+            </form>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="register.html">Pas encore de compte ? S'inscrire</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

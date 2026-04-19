@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Nouvel abonnement</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-dumbbell"></i> FitManager - Admin</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="abonnements.html">Abonnements</a>
+        <a href="demandes.html">Demandes</a>
+        <a href="analytics.html">Analytique</a>
+        <a href="../logout">Déconnexion</a>
+    </div>
+</nav>
+
+<div class="container" style="max-width:640px;">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+        <a href="abonnements.html" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Retour</a>
+        <h1 style="margin:0;" id="page-title">Nouvel abonnement</h1>
+    </div>
+
+    <div class="card">
+        <!-- action="/abonnements" method="post" → AbonnementServlets -->
+        <form id="abonnementForm" action="../abonnements" method="post">
+            <input type="hidden" name="action" id="formAction" value="create">
+            <input type="hidden" name="id"     id="abonnementId">
+
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Adhérent (ID)</label>
+                <input type="number" name="adherentId" id="adherentId" placeholder="ex : 5" required min="1">
+                <small style="color:var(--text-light)">Saisissez l'identifiant de l'adhérent en base.</small>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Salle (ID)</label>
+                <select name="localId" id="localId" required>
+                    <option value="">— Sélectionner une salle —</option>
+                    <option value="1">1 — Salle Centre-Ville</option>
+                    <option value="2">2 — Salle Lac</option>
+                    <option value="3">3 — Salle Marsa</option>
+                </select>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-plus"></i> Date de début</label>
+                    <input type="date" name="dateDebut" id="dateDebut" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-times"></i> Date de fin</label>
+                    <input type="date" name="dateFin" id="dateFin" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-toggle-on"></i> Statut</label>
+                <select name="statut" id="statut">
+                    <option value="actif">Actif</option>
+                    <option value="suspendu">Suspendu</option>
+                    <option value="expire">Expiré</option>
+                </select>
+            </div>
+
+            <div id="error-box" class="alert-error" style="display:none;"></div>
+
+            <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <a href="abonnements.html" class="btn btn-secondary btn-block">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Si ?id= dans l'URL → mode édition
+    const params    = new URLSearchParams(window.location.search);
+    const editId    = params.get('id');
+    const errorParam = params.get('error');
+
+    if (errorParam) {
+        const box = document.getElementById('error-box');
+        box.style.display = 'block';
+        box.textContent   = decodeURIComponent(errorParam);
+    }
+
+    // Pré-remplir les dates par défaut (aujourd'hui → +1 an)
+    const today   = new Date().toISOString().split('T')[0];
+    const nextYear = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                         .toISOString().split('T')[0];
+    document.getElementById('dateDebut').value = today;
+    document.getElementById('dateFin').value   = nextYear;
+
+    if (editId) {
+        document.getElementById('page-title').textContent = 'Modifier l\'abonnement #' + editId;
+        document.getElementById('formAction').value       = 'update';
+        document.getElementById('abonnementId').value     = editId;
+        document.getElementById('submitBtn').innerHTML    = '<i class="fas fa-save"></i> Mettre à jour';
+
+        // Pré-charger les données existantes depuis le servlet
+        fetch('../abonnements?action=view&id=' + editId)
+            .then(r => r.json())
+            .then(a => {
+                document.getElementById('adherentId').value = a.adherentId;
+                document.getElementById('localId').value    = a.localId;
+                document.getElementById('dateDebut').value  = a.dateDebut;
+                document.getElementById('dateFin').value    = a.dateFin;
+                document.getElementById('statut').value     = a.statut;
+            })
+            .catch(() => {/* données non chargées, formulaire vide */});
+    }
+
+    // Validation côté client
+    document.getElementById('abonnementForm').addEventListener('submit', function(e) {
+        const debut = document.getElementById('dateDebut').value;
+        const fin   = document.getElementById('dateFin').value;
+        if (debut && fin && fin <= debut) {
+            e.preventDefault();
+            const box = document.getElementById('error-box');
+            box.style.display = 'block';
+            box.textContent   = 'La date de fin doit être après la date de début.';
+        }
+    });
+</script>
+</body>
+</html>

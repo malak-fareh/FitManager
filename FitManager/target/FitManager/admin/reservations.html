@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Réservations (Admin)</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-dumbbell"></i> FitManager - Admin</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="abonnements.html">Abonnements</a>
+        <a href="reservations.html">Réservations</a>
+        <a href="locaux-gestion.html">Locaux</a>
+        <a href="demandes.html">Demandes</a>
+        <a href="analytics.html">Analytique</a>
+        <a href="../logout">Déconnexion</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+            <h1 style="margin:0;"><i class="fas fa-calendar-alt" style="color:var(--primary-orange);"></i> Gestion des réservations</h1>
+            <p style="color:var(--text-light);margin:0;">Vue globale de toutes les réservations</p>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="stats-grid" style="margin-bottom:1.5rem;">
+        <div class="stat-card">
+            <div class="stat-number" id="k-total">—</div>
+            <div class="stat-label">Total réservations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="k-auj">—</div>
+            <div class="stat-label">Aujourd'hui</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="k-annulees">—</div>
+            <div class="stat-label">Annulées</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="k-taux">—</div>
+            <div class="stat-label">Taux annulation</div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters-card">
+        <div class="filter-row">
+            <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                <select id="filtreLocal">
+                    <option value="">Toutes les salles</option>
+                    <option value="1">Centre-Ville</option>
+                    <option value="2">Lac</option>
+                    <option value="3">Marsa</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                <select id="filtreStatut">
+                    <option value="">Tous les statuts</option>
+                    <option value="confirmee">Confirmées</option>
+                    <option value="annulee">Annulées</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                <input type="date" id="filtreDate" placeholder="Date">
+            </div>
+            <button class="btn btn-secondary" onclick="resetFiltres()"><i class="fas fa-undo"></i> Réinitialiser</button>
+        </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Adhérent</th>
+                        <th>Salle</th>
+                        <th>Date</th>
+                        <th>Créneau</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="resa-tbody">
+                    <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-light);">Chargement…</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pagination" style="display:flex;justify-content:flex-end;gap:.5rem;padding:1rem;"></div>
+    </div>
+</div>
+
+<script>
+    const SALLES   = { 1:'Centre-Ville', 2:'Lac', 3:'Marsa' };
+    const MEMBRES  = { 5:'Mariem Ben Ali', 6:'Ahmed Trabelsi', 7:'Sonia Bel Haj', 8:'Omar Mansouri' };
+
+    // Données mock
+    const allResa = [
+        { id:1,  adherentId:5, localId:1, dateReservation:'2026-04-18', heureDebut:'08:00', heureFin:'09:00', statut:'confirmee' },
+        { id:2,  adherentId:6, localId:2, dateReservation:'2026-04-18', heureDebut:'18:00', heureFin:'19:00', statut:'confirmee' },
+        { id:3,  adherentId:7, localId:1, dateReservation:'2026-04-19', heureDebut:'10:00', heureFin:'11:00', statut:'confirmee' },
+        { id:4,  adherentId:8, localId:3, dateReservation:'2026-04-17', heureDebut:'07:00', heureFin:'08:00', statut:'annulee'   },
+        { id:5,  adherentId:5, localId:2, dateReservation:'2026-04-20', heureDebut:'09:00', heureFin:'10:00', statut:'confirmee' },
+        { id:6,  adherentId:6, localId:1, dateReservation:'2026-04-15', heureDebut:'20:00', heureFin:'21:00', statut:'annulee'   },
+    ];
+
+    function fmt(d) { if(!d) return '—'; const [y,m,j]=d.split('-'); return j+'/'+m+'/'+y; }
+
+    function resetFiltres() {
+        document.getElementById('filtreLocal').value  = '';
+        document.getElementById('filtreStatut').value = '';
+        document.getElementById('filtreDate').value   = '';
+        renderTable();
+    }
+
+    function renderTable() {
+        const fLocal  = document.getElementById('filtreLocal').value;
+        const fStatut = document.getElementById('filtreStatut').value;
+        const fDate   = document.getElementById('filtreDate').value;
+
+        let list = allResa.filter(r => {
+            if (fLocal  && String(r.localId)          !== fLocal)  return false;
+            if (fStatut && r.statut                   !== fStatut) return false;
+            if (fDate   && r.dateReservation          !== fDate)   return false;
+            return true;
+        }).sort((a,b) => b.dateReservation.localeCompare(a.dateReservation));
+
+        // KPIs
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('k-total').textContent    = allResa.length;
+        document.getElementById('k-auj').textContent      = allResa.filter(r=>r.dateReservation===today).length;
+        document.getElementById('k-annulees').textContent = allResa.filter(r=>r.statut==='annulee').length;
+        document.getElementById('k-taux').textContent     = Math.round(allResa.filter(r=>r.statut==='annulee').length / allResa.length * 100) + '%';
+
+        const tbody = document.getElementById('resa-tbody');
+        if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+                <h3>Aucune réservation trouvée</h3></div></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = list.map(r => {
+            const badgeClass = r.statut === 'confirmee' ? 'badge-success' : 'badge-danger';
+            const badgeLabel = r.statut === 'confirmee' ? 'Confirmée' : 'Annulée';
+            return `<tr>
+                <td>${r.id}</td>
+                <td>${MEMBRES[r.adherentId]||'Adhérent #'+r.adherentId}</td>
+                <td>${SALLES[r.localId]||'—'}</td>
+                <td>${fmt(r.dateReservation)}</td>
+                <td>${r.heureDebut} – ${r.heureFin}</td>
+                <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+                <td>${r.statut==='confirmee'
+                    ? `<button class="btn btn-sm" style="background:#fef2f2;color:#b91c1c;" onclick="annuler(${r.id})"><i class="fas fa-ban"></i> Annuler</button>`
+                    : '—'}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function annuler(id) {
+        if (!confirm('Annuler cette réservation ?')) return;
+        const r = allResa.find(x=>x.id===id);
+        if (r) { r.statut='annulee'; renderTable(); }
+    }
+
+    ['filtreLocal','filtreStatut','filtreDate'].forEach(id =>
+        document.getElementById(id).addEventListener('change', renderTable));
+
+    renderTable();
+</script>
+</body>
+</html>

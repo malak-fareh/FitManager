@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Mon espace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> <i class="fas fa-dumbbell"></i>
+        FitManager
+        <div>
+            <a href="dashboard.html">Tableau de bord</a>
+            <a href="reservation.html">Réserver</a>
+            <a href="demande-transfert.html">Changer de local</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container" id="dashboard-container">
+        <div class="card" style="text-align: center;">Chargement de vos données...</div>
+    </div>
+
+    <script>
+        // Récupérer l'utilisateur connecté depuis la session
+        fetch('../api/user/current')
+            .then(response => response.json())
+            .then(user => {
+                // Récupérer l'abonnement de l'utilisateur
+                return Promise.all([
+                    Promise.resolve(user),
+                    fetch(`../api/abonnements?adherent_id=${user.id}`).then(r => r.json())
+                ]);
+            })
+            .then(([user, abonnement]) => {
+                // Récupérer les réservations de l'utilisateur
+                return Promise.all([
+                    Promise.resolve(user),
+                    Promise.resolve(abonnement),
+                    fetch(`../api/reservations?adherent_id=${user.id}`).then(r => r.json())
+                ]);
+            })
+            .then(([user, abonnement, reservations]) => {
+                // Récupérer les demandes de l'utilisateur
+                return Promise.all([
+                    Promise.resolve(user),
+                    Promise.resolve(abonnement),
+                    Promise.resolve(reservations),
+                    fetch(`../api/demandes?adherent_id=${user.id}`).then(r => r.json())
+                ]);
+            })
+            .then(([user, abonnement, reservations, demandes]) => {
+                const container = document.getElementById('dashboard-container');
+                
+                // Récupérer le nom du local
+                let localNom = 'Non défini';
+                fetch(`../api/locaux/${abonnement.localId}`)
+                    .then(r => r.json())
+                    .then(local => {
+                        localNom = local.nom;
+                    });
+                
+                container.innerHTML = `
+                    <h1>Bonjour, ${user.nom}</h1>
+                    <p>Bienvenue sur votre espace FitManager</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${localNom}</div>
+                            <div class="stat-label">Votre salle principale</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${abonnement.type || 'Standard'}</div>
+                            <div class="stat-label">Votre abonnement</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${abonnement.dateFin || 'N/A'}</div>
+                            <div class="stat-label">Date d'échéance</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>📅 Mes prochaines réservations</h3>
+                            ${renderReservations(reservations)}
+                            <a href="reservation.html" class="btn btn-primary" style="margin-top: 1rem;">+ Nouvelle réservation</a>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>🔄 Mes demandes de transfert</h3>
+                            ${renderDemandes(demandes)}
+                            <a href="demande-transfert.html" class="btn btn-secondary" style="margin-top: 1rem;">Nouvelle demande</a>
+                        </div>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                document.getElementById('dashboard-container').innerHTML = 
+                    '<div class="card"><p style="color: red;">Erreur de chargement. Veuillez vous reconnecter.</p><a href="../login.html" class="btn btn-primary">Se connecter</a></div>';
+            });
+        
+        function renderReservations(reservations) {
+            if (!reservations || reservations.length === 0) {
+                return '<p>Aucune réservation à venir</p>';
+            }
+            return `
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Date</th><th>Créneau</th><th>Salle</th></tr>
+                    </thead>
+                    <tbody>
+                        ${reservations.slice(0, 3).map(r => `
+                            <tr><td>${r.date}</td><td>${r.creneau}</td><td>${r.localNom}</td></tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        function renderDemandes(demandes) {
+            if (!demandes || demandes.length === 0) {
+                return '<p>Aucune demande</p>';
+            }
+            return `
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Date</th><th>Vers</th><th>Statut</th></tr>
+                    </thead>
+                    <tbody>
+                        ${demandes.slice(0, 3).map(d => `
+                            <tr>
+                                <td>${d.date}</td>
+                                <td>${d.localDestinationNom}</td>
+                                <td><span class="${d.statut === 'en_attente' ? 'occupation-moyen' : 'occupation-faible'}">${d.statut === 'en_attente' ? 'En attente' : 'Validée'}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
+</body>
+</html>

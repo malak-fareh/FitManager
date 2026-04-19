@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Inscription</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">  <i class="fas fa-dumbbell"></i>
+        FitManager
+        <div>
+            <a href="index.html">Accueil</a>
+            <a href="locaux.html">Nos salles</a>
+            <a href="login.html">Connexion</a>
+        </div>
+    </nav>
+    
+    <div class="container" style="max-width: 500px;">
+        <div class="card">
+            <h2 style="text-align: center;">Inscription</h2>
+            <form action="register" method="post" style="margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label>Pseudo</label>
+                    <input type="text" name="pseudo" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Âge</label>
+                    <input type="number" name="age" min="0" max="120">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" name="motDePasse" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">S'inscrire</button>
+            </form>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="login.html">Déjà un compte ? Se connecter</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

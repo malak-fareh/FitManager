@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Analytique Gérant</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-dumbbell"></i> FitManager - Gérant</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analytics.html">Analytique</a>
+        <a href="../logout">Déconnexion</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 style="margin-bottom:.25rem;"><i class="fas fa-chart-bar" style="color:var(--primary-orange);"></i> Analytique — Ma salle</h1>
+    <p style="color:var(--text-light);margin-bottom:2rem;">Statistiques de votre local</p>
+
+    <!-- KPIs -->
+    <div class="stats-grid" style="margin-bottom:2rem;">
+        <div class="stat-card">
+            <div class="stat-number" id="kpi-membres">—</div>
+            <div class="stat-label">Abonnés actifs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="kpi-taux">—</div>
+            <div class="stat-label">Taux d'occupation</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="kpi-reservations">—</div>
+            <div class="stat-label">Réservations (30j)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="kpi-transferts">—</div>
+            <div class="stat-label">Demandes de transfert</div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="gap:1.5rem;">
+        <!-- Abonnés par mois -->
+        <div class="card">
+            <h3 style="margin-bottom:1rem;"><i class="fas fa-users" style="color:var(--primary-orange);"></i> Abonnés par mois</h3>
+            <canvas id="chartMensuel" height="200"></canvas>
+        </div>
+
+        <!-- Réservations par créneau -->
+        <div class="card">
+            <h3 style="margin-bottom:1rem;"><i class="fas fa-clock" style="color:var(--primary-orange);"></i> Créneaux les plus demandés</h3>
+            <canvas id="chartCreneaux" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Occupation en temps réel -->
+    <div class="card" style="margin-top:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3><i class="fas fa-broadcast-tower" style="color:var(--primary-orange);"></i> Occupation actuelle</h3>
+            <div class="live-indicator">
+                <div class="pulse-dot"></div>
+                <span>Données en direct</span>
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
+            <div style="flex:1;min-width:200px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:.5rem;">
+                    <span style="font-size:.875rem;color:var(--text-gray);">Présents maintenant</span>
+                    <span id="occ-actuelle" style="font-weight:700;color:var(--primary-orange);">45 / 100</span>
+                </div>
+                <div class="progress-bar" style="height:.75rem;">
+                    <div class="progress-fill green" id="occ-bar" style="width:45%;"></div>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <div style="font-size:2.5rem;font-weight:800;color:var(--primary-orange);" id="occ-pct">45%</div>
+                <div style="font-size:.75rem;color:var(--text-light);">Taux actuel</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Données issues du servlet /stats (simulées ici si non connecté)
+    fetch('../stats?action=summary', { credentials:'include' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+            if (data) {
+                document.getElementById('kpi-membres').textContent = data.active ?? '—';
+            }
+        })
+        .catch(() => {});
+
+    // Données mock pour les graphiques
+    document.getElementById('kpi-membres').textContent     = '72';
+    document.getElementById('kpi-taux').textContent        = '45%';
+    document.getElementById('kpi-reservations').textContent= '318';
+    document.getElementById('kpi-transferts').textContent  = '3';
+
+    const mois = ['Nov','Déc','Jan','Fév','Mar','Avr'];
+
+    new Chart(document.getElementById('chartMensuel'), {
+        type: 'bar',
+        data: {
+            labels: mois,
+            datasets: [{
+                label: 'Abonnés',
+                data: [58, 62, 67, 70, 71, 72],
+                backgroundColor: 'rgba(249,115,22,0.8)',
+                borderRadius: 6
+            }]
+        },
+        options: { responsive:true, plugins:{ legend:{ display:false } },
+                   scales:{ y:{ beginAtZero:true } } }
+    });
+
+    new Chart(document.getElementById('chartCreneaux'), {
+        type: 'bar',
+        data: {
+            labels: ['6h','8h','10h','12h','14h','16h','18h','20h'],
+            datasets: [{
+                label: 'Réservations',
+                data: [15, 42, 28, 35, 20, 38, 55, 45],
+                backgroundColor: 'rgba(30,59,138,0.8)',
+                borderRadius: 6
+            }]
+        },
+        options: { responsive:true, plugins:{ legend:{ display:false } },
+                   scales:{ y:{ beginAtZero:true } } }
+    });
+</script>
+</body>
+</html>

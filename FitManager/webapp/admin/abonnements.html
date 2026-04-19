@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Gestion des abonnements</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> <i class="fas fa-dumbbell"></i>
+        FitManager_Admin
+        <div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="abonnements.html">Abonnements</a>
+            <a href="demandes.html">Demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1>Gestion des abonnements</h1>
+            <a href="abonnement-form.html" class="btn btn-primary">+ Nouvel abonnement</a>
+        </div>
+        
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Membre</th>
+                        <th>Email</th>
+                        <th>Salle</th>
+                        <th>Type</th>
+                        <th>Échéance</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Amira Ben Salem</td>
+                        <td>amira@email.com</td>
+                        <td>Centre-Ville</td>
+                        <td>Premium Annuel</td>
+                        <td>15/01/2026</td>
+                        <td><span class="occupation-faible">Actif</span></td>
+                        <td>
+                            <a href="#" class="btn btn-secondary" style="padding: 0.25rem 0.5rem;">Renouveler</a>
+                            <a href="#" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">Suspendre</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mohamed Trabelsi</td>
+                        <td>mohamed@email.com</td>
+                        <td>Centre-Ville</td>
+                        <td>Standard Mensuel</td>
+                        <td>01/04/2025</td>
+                        <td><span class="occupation-faible">Actif</span></td>
+                        <td>
+                            <a href="#" class="btn btn-secondary" style="padding: 0.25rem 0.5rem;">Renouveler</a>
+                            <a href="#" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">Suspendre</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Salma Gharbi</td>
+                        <td>salma@email.com</td>
+                        <td>Lac</td>
+                        <td>Premium Annuel</td>
+                        <td>01/12/2025</td>
+                        <td><span class="occupation-moyen">Suspendu</span></td>
+                        <td>
+                            <a href="#" class="btn btn-secondary" style="padding: 0.25rem 0.5rem;">Réactiver</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ahmed Khelifi</td>
+                        <td>ahmed@email.com</td>
+                        <td>Sfax</td>
+                        <td>Standard Mensuel</td>
+                        <td>01/02/2025</td>
+                        <td><span class="occupation-eleve">Expiré</span></td>
+                        <td>
+                            <a href="#" class="btn btn-primary" style="padding: 0.25rem 0.5rem;">Renouveler</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

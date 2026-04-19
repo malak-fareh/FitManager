@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Nos salles</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card h3 { margin-bottom: 0.75rem; color: #1E3A8A; }
+        .card p { margin-bottom: 0.5rem; color: #4a5568; }
+        .btn { display: inline-block; padding: 0.5rem 1rem; background: #F97316; color: white; border-radius: 0.5rem; text-decoration: none; margin-top: 1rem; }
+        .occupation-faible { color: #10b981; font-weight: bold; }
+        .occupation-moyen { color: #f59e0b; font-weight: bold; }
+        .occupation-eleve { color: #ef4444; font-weight: bold; }
+        .navbar { background: #0f172a; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        .navbar .logo i { color: #F97316; margin-right: 0.5rem; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .navbar a:hover { color: #F97316; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        h1 { margin-bottom: 0.5rem; }
+        h1 i { color: #F97316; margin-right: 0.5rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            FitManager
+        </div>
+        <div>
+            <a href="index.html">Accueil</a>
+            <a href="locaux.html">Nos salles</a>
+            <a href="login.html">Connexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1><i class="fas fa-map-marker-alt"></i> Nos salles de sport</h1>
+        <p>Consultez le taux d'occupation en temps réel</p>
+        
+        <div class="grid-3" id="locaux-container"></div>
+    </div>
+
+    <script>
+        // DONNÉES MOCKÉES - EXACTEMENT ALIGNÉES AVEC LA BASE DE DONNÉES
+        const locauxMock = [
+            {
+                id: 1,
+                nom: "FitManager Centre-Ville",
+                adresse: "15 Avenue Habib Bourguiba, Tunis",
+                capaciteMax: 120,
+                tauxOccupation: 87
+            },
+            {
+                id: 2,
+                nom: "FitManager Lac",
+                adresse: "42 Rue du Lac, Les Berges du Lac, Tunis",
+                capaciteMax: 100,
+                tauxOccupation: 45
+            },
+            {
+                id: 3,
+                nom: "FitManager Sfax",
+                adresse: "88 Avenue Majida Boulila, Sfax",
+                capaciteMax: 150,
+                tauxOccupation: 75
+            },
+            {
+                id: 4,
+                nom: "FitManager Sousse",
+                adresse: "25 Avenue Hedi Chaker, Sousse",
+                capaciteMax: 80,
+                tauxOccupation: 65
+            }
+        ];
+        
+        const container = document.getElementById('locaux-container');
+        
+        locauxMock.forEach(local => {
+            let classeOccupation = '';
+            let texteOccupation = '';
+            
+            if (local.tauxOccupation < 50) {
+                classeOccupation = 'occupation-faible';
+                texteOccupation = '<i class="fas fa-smile"></i> ' + local.tauxOccupation + '% - Faible';
+            } else if (local.tauxOccupation < 80) {
+                classeOccupation = 'occupation-moyen';
+                texteOccupation = '<i class="fas fa-meh"></i> ' + local.tauxOccupation + '% - Moyen';
+            } else {
+                classeOccupation = 'occupation-eleve';
+                texteOccupation = '<i class="fas fa-frown"></i> ' + local.tauxOccupation + '% - Élevé';
+            }
+            
+            container.innerHTML += `
+                <div class="card">
+                    <h3><i class="fas fa-dumbbell"></i> ${local.nom}</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> ${local.adresse}</p>
+                    <p><i class="fas fa-users"></i> Capacité : ${local.capaciteMax} personnes</p>
+                    <p><i class="fas fa-chart-line"></i> Taux occupation : <span class="${classeOccupation}">${texteOccupation}</span></p>
+                    <a href="login.html" class="btn"><i class="fas fa-calendar-plus"></i> Réserver</a>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

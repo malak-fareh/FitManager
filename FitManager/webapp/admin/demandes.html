@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitManager - Gestion des demandes</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; }
+        .navbar { background: #0f172a; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        .navbar .logo i { color: #F97316; margin-right: 0.5rem; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1.5rem; }
+        .navbar a:hover { color: #F97316; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 1rem; }
+        h1 i { color: #F97316; margin-right: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: #1e293b; }
+        .btn-valider { background: #10b981; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; margin-right: 0.5rem; }
+        .btn-refuser { background: #ef4444; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            FitManager - Admin
+        </div>
+        <div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="abonnements.html">Abonnements</a>
+            <a href="demandes.html">Demandes</a>
+            <a href="../login.html">Déconnexion</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1><i class="fas fa-clock"></i> Demandes de transfert en attente</h1>
+        
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Adhérent</th>
+                        <th>Local actuel</th>
+                        <th>Local demandé</th>
+                        <th>Date</th>
+                        <th>Motif</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- DEMANDE CORRESPONDANT À LA BDD -->
+                    <tr>
+                        <td>Amira Ben Salem</td>
+                        <td>FitManager Centre-Ville</td>
+                        <td>FitManager Lac</td>
+                        <td>18/03/2026</td>
+                        <td>Plus proche de mon travail</td>
+                        <td>
+                            <button class="btn-valider" onclick="valider(1)">Valider</button>
+                            <button class="btn-refuser" onclick="refuser(1)">Refuser</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mohamed Trabelsi</td>
+                        <td>FitManager Centre-Ville</td>
+                        <td>FitManager Sousse</td>
+                        <td>20/03/2026</td>
+                        <td>Déménagement</td>
+                        <td>
+                            <button class="btn-valider" onclick="valider(2)">Valider</button>
+                            <button class="btn-refuser" onclick="refuser(2)">Refuser</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function valider(id) {
+            alert('Demande n°' + id + ' validée');
+            location.reload();
+        }
+        
+        function refuser(id) {
+            alert('Demande n°' + id + ' refusée');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
